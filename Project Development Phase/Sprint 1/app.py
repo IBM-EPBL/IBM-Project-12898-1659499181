@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, redirect
 from flask import render_template
 
 
@@ -13,6 +13,17 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/register')
+@app.route('/register' , methods = ['GET' , 'POST'])
 def register():
-    return render_template('register.html')
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password1 = request.form['password1']
+        password2 = request.form['password2']
+        print(name)
+        print(email)
+        print(password1)
+        print(password2)
+
+
+    return render_template('register.html', name = "register")
