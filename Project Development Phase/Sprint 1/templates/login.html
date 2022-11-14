@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+{% block page_content %}
+
+    <!-- Body -->
+    <section class="bg-light p-4 pt-5 mt-3">
+        <div class="container px-5">
+            <h2 class="text-center text-secondary">
+                Login To <span class="text-info">WPD Login System</span>
+            </h2>
+            <div class="d-flex align-items-center justify-content-center">
+                <form class="py-5">
+                    <div class="mb-3 text-dark">
+                        <label for="username" class="form-label text">User Name : </label>
+                        <input type="email" class="form-control" style="width:400px" required>
+                    </div>
+                    <div class="mb-3 text-dark">
+                        <label for="password" class="form-label text">Password : </label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                    <br>
+                    <div class="text-center mb-3">
+                        <button class="btn btn-info">Submit</button>
+                    </div>
+                    <div class="text-center">
+                        <a href="{{ url_for('register')}}">Sign Up</a> / <a href="{{ url_for('register')}}">Forgot Password</a>
+                    </div>
+                </form>
+            </div>
+            <h3 class="text-center text-secondary">
+                Welcome To <span class="text-info">WPD Login System</span>
+            </h3>
+        </div>
+    </section>
+
+{% endblock %}
