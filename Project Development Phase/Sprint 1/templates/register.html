@@ -1,10 +1,51 @@
 {% extends "index.html" %}
 {% block page_content %}
 
-<h3>
-    This is the register page.
-</h3>
-
-
+<!-- Body -->
+<section class="bg-light p-4 pt-5">
+    <div class="container px-5">
+        <h2 class="text-center text-secondary">
+            Register To <span class="text-info">WPD Login System</span>
+        </h2>
+        <div class="d-flex align-items-center justify-content-center">
+            <form class="py-5" method="post">
+                <div class="mb-3 text-dark">
+                    <label for="name" class="form-label text">Name : </label>
+                    <input type="text" class="form-control" style="width:400px" required>
+                </div>
+                <div class="mb-3 text-dark">
+                    <label for="username" class="form-label text">Username : </label>
+                    (Enter email address)
+                    <input type="email" class="form-control" required>
+                </div>
+                <div class="mb-3 text-dark">
+                    <label for="password" class="form-label text">Password : </label>
+                    <input type="password" class="form-control" required>
+                </div>
+                <div class="mb-3 text-dark">
+                    <label for="confirmpassword" class="form-label text">Confirm Password : </label>
+                    <input type="password" class="form-control">
+                </div>
+                <div class="dropdown-center mb-3">
+                    <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Gender
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Male</a></li>
+                      <li><a class="dropdown-item" href="#">Female</a></li>
+                      <li><a class="dropdown-item" href="#">Other</a></li>
+                    </ul>
+                </div>
+                <div class="mb-3 text-dark">
+                    <label for="dob" class="form-label text">Date Of Birth : </label>
+                    <input type="date" class="form-control" required>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-info">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 
 {% endblock %}
