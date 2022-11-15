@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, flash, url_for
+from flask import Flask, request, redirect, flash, url_for, session
 from flask import render_template
 from flask_bcrypt import Bcrypt
 from flask_mysqldb import MySQL
@@ -19,51 +19,49 @@ mysql = MySQL(app)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     if request.method == 'POST':
         email = request.form['email']
         
         cursor = mysql.connection.cursor()
         bcrypt = Bcrypt()
 
-        cursor.execute('''SELECT pass FROM user WHERE email = %s''', [email])
+        cursor.execute('''SELECT * FROM user WHERE email = %s''', [email])
         account = cursor.fetchone()
-
-        print("UserPass is ",account[0])
         password = request.form['password']
+        # print(account[2])
 
-        confirmPasswordCheck = bcrypt.check_password_hash(account[0], password)
-        print("Confirm " , confirmPasswordCheck)
+        confirmPasswordCheck = bcrypt.check_password_hash(account[2], password)
+        if(confirmPasswordCheck):
+            session['loggedin'] = True
+            session['username'] = account[1]
+            return redirect(url_for('home'))
+        else:
+            print("Hello")
+            flash('Incorrect username/password')
+    else:
+        flash('Incorrect username/password')
 
-
-        
- 
-        # if account:
-        #     password_rs = account['password']
-        #     print(password_rs)
-        #     # If account exists in users table in out database
-        #     if check_password_hash(password_rs, password):
-        #         # Create session data, we can access this data in other routes
-        #         session['loggedin'] = True
-        #         session['id'] = account['id']
-        #         session['username'] = account['username']
-        #         # Redirect to home page
-        #         return redirect(url_for('home'))
-        #     else:
-        #         # Account doesnt exist or username/password incorrect
-        #         flash('Incorrect username/password')
-        # else:
-        #     # Account doesnt exist or username/password incorrect
-        #     flash('Incorrect username/password')
-
-        return redirect(url_for('home'))
+        # return redirect(url_for('home'))
 
 
     return render_template('login.html', name = "login")
 
+
+@app.route('/logout')
+def logout():
+   session.pop('loggedin', None)
+   session.pop('username', None)
+   flash("You have successfully logged out, please log in again!")
+   return redirect(url_for('login'))
+
 @app.route('/')
 def home():
-    return render_template('home.html')
+
+    if 'loggedin' in session:
+        print("Hi")
+        return render_template('home.html')
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/register' , methods = ['GET' , 'POST'])
@@ -90,27 +88,10 @@ def register():
         else:
             cursor.execute(''' INSERT INTO User VALUES(%s,%s,%s,%s,%s)''',(name,email, hashed_password,gender, dob))
             mysql.connection.commit()
-            flash('You have successfully registered!')
+            flash('You have successfully registered! Please login')
 
+            return redirect(url_for('login'))
 
-        #New User
-
-
-        # password2 = request.form['password2']
-        # confirmPasswordCheck = bcrypt.check_password_hash(hashed_password, password2)
-
-
-
-        # print("Password1: ", password1)
-        # print("Password2: " , password2)
-        # print("Confirm ", confirmPasswordCheck)
-
-        # if(confirmPasswordCheck == 1):
-        #     print("yes")
-        # print(name)
-        # print(email)
-        # print(password2 )
-        # print(type(password2))
         cursor.close()
 
 

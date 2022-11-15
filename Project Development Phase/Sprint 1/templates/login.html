@@ -3,6 +3,18 @@
 
     <!-- Body -->
     <section class="bg-light p-4 pt-5 mt-3">
+        {% with messages = get_flashed_messages()  %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="container px-5">
             <h2 class="text-center text-secondary">
                 Login To <span class="text-info">WPD Login System</span>
