@@ -2,8 +2,13 @@ from flask import Flask, request, redirect, flash, url_for, session
 from flask import render_template
 from flask_bcrypt import Bcrypt
 from flask_mysqldb import MySQL
+from flask_mail import Mail, Message
+from threading import Thread
 
 
+
+mailID = "varun10test@gmail.com"
+mailIDpass = "123thisisit"
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -13,6 +18,16 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '$IBMCloud123!'
 app.config['MYSQL_DB'] = 'Web Phishing'
+
+#Sending Mail
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = mailID
+app.config['MAIL_PASSWORD'] = mailIDpass
+mail = Mail(app)
+
  
 mysql = MySQL(app)
 
@@ -96,3 +111,33 @@ def register():
 
 
     return render_template('register.html', name = "register")
+
+
+
+@app.route('/forgotPass' , methods = ['GET' , 'POST'])
+def forgotPass():
+
+    if request.method == 'post':
+        email = request.form('email')
+        cursor = mysql.connection.cursor()
+
+
+        #Check for existing user
+        cursor.execute('''SELECT * FROM user WHERE email = %s''', [email])
+        account = cursor.fetchone()
+
+        if(account):
+            msg = Message()
+            msg.subject = "Password Reset"
+            msg.recipients = email
+            msg.sender = mailID
+            # msg.html = render_template('reset_email.html', user=account, token=token)
+
+
+
+    return render_template('forgotPassword.html')
+
+
+
+
+
