@@ -8,14 +8,14 @@
                 Login To <span class="text-info">WPD Login System</span>
             </h2>
             <div class="d-flex align-items-center justify-content-center">
-                <form class="py-5">
+                <form class="py-5" method = "post">
                     <div class="mb-3 text-dark">
-                        <label for="username" class="form-label text">User Name : </label>
-                        <input type="email" class="form-control" style="width:400px" required>
+                        <label for="username" class="form-label text">User Name: </label>
+                        <input type="email" name ="email" id="email" class="form-control" style="width:400px" required>
                     </div>
                     <div class="mb-3 text-dark">
                         <label for="password" class="form-label text">Password : </label>
-                        <input type="password" class="form-control" required>
+                        <input type="password" name ="password" id="password" class="form-control" required>
                     </div>
                     <br>
                     <div class="text-center mb-3">
