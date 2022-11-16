@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from threading import Thread
-
+import ibm_db
 
 
 mailID = "varun10test@gmail.com"
@@ -14,10 +14,10 @@ app = Flask(__name__)
 app.secret_key = "super secret key"
 
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '$IBMCloud123!'
-app.config['MYSQL_DB'] = 'Web Phishing'
+app.config['MYSQL_HOST'] = '125f9f61-9715-46f9-9399-c8177b21803b.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud'
+app.config['MYSQL_USER'] = '2116190701229@smartinternz.com'
+app.config['MYSQL_PASSWORD'] = 'Thuhin@6119'
+app.config['MYSQL_DB'] = 'bludb'
 
 #Sending Mail
 
@@ -37,7 +37,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         
-        cursor = mysql.connection.cursor()
+        cursor = ibm_db.connection("DATABASE=bludb;HOSTNAME=125f9f61-9715-46f9-9399-c8177b21803b.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud;PORT=30426;SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt")
         bcrypt = Bcrypt()
 
         cursor.execute('''SELECT * FROM user WHERE email = %s''', [email])
