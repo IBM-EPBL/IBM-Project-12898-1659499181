@@ -12,15 +12,7 @@ mailIDpass = "123thisisit"
 app = Flask(__name__)
 app.secret_key = "super secret key"
 
-cursor = ibm_db.connect("DATABASE=bludb;HOSTNAME=125f9f61-9715-46f9-9399-c8177b21803b.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud;PORT=30426;SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;UID=fgq80014;PWD=FfWqq4xxSBCf7CAO","","")
-print(cursor)
-
-'''
-app.config['MYSQL_HOST'] = '125f9f61-9715-46f9-9399-c8177b21803b.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud'
-app.config['MYSQL_USER'] = 'fgq80014'
-app.config['MYSQL_PASSWORD'] = 'FfWqq4xxSBCf7CAO'
-app.config['MYSQL_DB'] = 'bludb'
-'''
+conn = ibm_db.connect("DATABASE=bludb;HOSTNAME=125f9f61-9715-46f9-9399-c8177b21803b.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud;PORT=30426;SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;UID=fgq80014;PWD=FfWqq4xxSBCf7CAO","","")
 
 #Sending Mail
 
@@ -36,30 +28,22 @@ mail = Mail(app)
 def login():
     if request.method == 'POST':
         email = request.form['email']
-        
-        bcrypt = Bcrypt()
-
-        cursor.execute('''SELECT * FROM user WHERE email = %s''', [email])
-        account = cursor.fetchone()
+        bcrypt = Bcrypt()      
+        sql = f"""SELECT * FROM "FGQ80014"."user" WHERE "email" = '{email}'"""
+        stmt = ibm_db.exec_immediate(conn, sql)
+        dictionary = ibm_db.fetch_both(stmt)
         password = request.form['password']
-        # print(account[2])
-
-        confirmPasswordCheck = bcrypt.check_password_hash(account[2], password)
+        confirmPasswordCheck = bcrypt.check_password_hash(dictionary[2], password)
         if(confirmPasswordCheck):
             session['loggedin'] = True
-            session['username'] = account[1]
+            session['username'] = dictionary[1]
             return redirect(url_for('home'))
         else:
             print("Hello")
             flash('Incorrect username/password')
     else:
         flash('Incorrect username/password')
-
-        # return redirect(url_for('home'))
-
-
     return render_template('login.html', name = "login")
-
 
 @app.route('/logout')
 def logout():
@@ -83,30 +67,23 @@ def register():
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
-        password1 = request.form['password1']
         dob= request.form['dob']
         gender = "M"
-
         bcrypt = Bcrypt()
         hashed_password = bcrypt.generate_password_hash(request.form['password1']).decode('utf-8')
-
-        sql='''SELECT * FROM user WHERE email = %s'''
+        sql = f"""SELECT COUNT(*) FROM "FGQ80014"."user" WHERE "email" = '{email}' """
         
         #Check for existing user
-        stmnt = ibm_db.exec_immediate(cursor, sql, [email])
-        account = cursor.fetchone()
-        if account:
+        stmnt = ibm_db.exec_immediate(conn, sql)
+        dictionary = ibm_db.fetch_both(stmnt)
+        if dictionary:
             flash('Account already exists!')
 
         else:
-            cursor.execute(''' INSERT INTO User VALUES(%s,%s,%s,%s,%s)''',(name,email, hashed_password,gender, dob))
-            mysql.connection.commit()
+            sql2 = f"""INSERT INTO "FGQ80014"."user" VALUES('{name}','{email}', '{hashed_password}','{gender}', '{dob}')"""
+            reg_user = ibm_db.exec_immediate(conn, sql2)
             flash('You have successfully registered! Please login')
-
             return redirect(url_for('login'))
-
-        cursor.close()
-
 
     return render_template('register.html', name = "register")
 
@@ -114,7 +91,6 @@ def register():
 
 @app.route('/forgotPass' , methods = ['GET' , 'POST'])
 def forgotPass():
-
     if request.method == 'post':
         email = request.form('email')
 
@@ -127,6 +103,5 @@ def forgotPass():
             msg.subject = "Password Reset"
             msg.recipients = email
             msg.sender = mailID
-            # msg.html = render_template('reset_email.html', user=account, token=token)
 
     return render_template('forgotPassword.html')
