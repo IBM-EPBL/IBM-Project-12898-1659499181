@@ -1,10 +1,11 @@
+import imp
 from flask import Flask, request, redirect, flash, url_for, session
 from flask import render_template
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 from threading import Thread
 import ibm_db
-
+from modelExtraction import main
 
 mailID = "varun10test@gmail.com"
 mailIDpass = "123thisisit"
@@ -52,12 +53,20 @@ def logout():
    flash("You have successfully logged out, please log in again!")
    return redirect(url_for('login'))
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-
+    
+    
     if 'loggedin' in session:
         print("Hi")
-        return render_template('home.html')
+        if request.method == 'post':
+            url = request.form["url"]
+            val = main(url)
+            print(val) #Check this val
+
+
+
+            return render_template('home.html')
     else:
         return redirect(url_for('login'))
 
