@@ -5,18 +5,7 @@
     <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
 
 
-    {% with messages = get_flashed_messages()  %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{ message }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">×</span>
-    </button>
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+
 <form class="py-5" method="post" >
     
     
@@ -26,6 +15,19 @@
             <input type="text" class="form-control" id="url" name="url" placeholder="Search" required>
             <button class="btn btn-outline-info" type="submit">🔎</button>
         </div>
+
+        {% with messages = get_flashed_messages()  %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
     </center>
 
 </form>

@@ -59,32 +59,34 @@ def logout():
 def home():
     
     
-    if 'loggedin' in session:
-        if request.method == 'POST':
-            url = request.form["url"]
+    if request.method == 'POST':
+        url = request.form["url"]
 
-            if(not(regex.search(r'^(http|ftp)s?://', url))):
-                print("ERRORR")
-                flash("Please input full url, for example- https://facebook.com or else it is a phishing site")
-                return render_template('home.html')
-            print(url)
-            val = main(url)
-            print(val) #Check this val
-
-            classifier = joblib.load('webPhishingDetectorSVM.pkl')
-
-            prediction = classifier.predict(val)
-            print(prediction)
-
-            if prediction[0]==1 :
-                print('website is legitimate')
-            elif prediction[0]==-1:
-                print('website is not legitimate')
-
+        if(not(regex.search(r'^(http|ftp)s?://', url))):
+            print("ERRORR")
+            flash("Please input full url, for example- https://facebook.com or else it is a phishing site")
             return render_template('home.html')
+        print(url)
+        val = main(url)
+        print(val) #Check this val
 
-        else:
-            return redirect(url_for('login'))
+        classifier = joblib.load('webPhishingDetectorSVM.pkl')
+
+        prediction = classifier.predict(val)
+        print(prediction)
+
+        if prediction[0]==1 :
+            flash("This is a legitimate site!")
+            print('website is legitimate')
+        elif prediction[0]==-1:
+            flash('This is a phishing site!')
+            print('Phishing site')
+
+
+        return render_template('home.html')
+
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/register' , methods = ['GET' , 'POST'])
