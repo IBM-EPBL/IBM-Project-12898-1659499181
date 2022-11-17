@@ -6,6 +6,8 @@ from flask_mail import Mail, Message
 from threading import Thread
 import ibm_db
 from modelExtraction import main
+import regex
+import joblib
 
 mailID = "varun10test@gmail.com"
 mailIDpass = "123thisisit"
@@ -58,17 +60,31 @@ def home():
     
     
     if 'loggedin' in session:
-        print("Hi")
-        if request.method == 'post':
+        if request.method == 'POST':
             url = request.form["url"]
+
+            if(not(regex.search(r'^(http|ftp)s?://', url))):
+                print("ERRORR")
+                flash("Please input full url, for example- https://facebook.com or else it is a phishing site")
+                return render_template('home.html')
+            print(url)
             val = main(url)
             print(val) #Check this val
 
+            classifier = joblib.load('webPhishingDetectorSVM.pkl')
 
+            prediction = classifier.predict(val)
+            print(prediction)
+
+            if prediction[0]==1 :
+                print('website is legitimate')
+            elif prediction[0]==-1:
+                print('website is not legitimate')
 
             return render_template('home.html')
-    else:
-        return redirect(url_for('login'))
+
+        else:
+            return redirect(url_for('login'))
 
 
 @app.route('/register' , methods = ['GET' , 'POST'])
@@ -98,19 +114,19 @@ def register():
 
 
 
-@app.route('/forgotPass' , methods = ['GET' , 'POST'])
-def forgotPass():
-    if request.method == 'post':
-        email = request.form('email')
+# @app.route('/forgotPass' , methods = ['GET' , 'POST'])
+# def forgotPass():
+#     if request.method == 'post':
+#         email = request.form('email')
 
-        #Check for existing user
-        cursor.execute('''SELECT * FROM user WHERE email = %s''', [email])
-        account = cursor.fetchone()
+#         #Check for existing user
+#         cursor.execute('''SELECT * FROM user WHERE email = %s''', [email])
+#         account = cursor.fetchone()
 
-        if(account):
-            msg = Message()
-            msg.subject = "Password Reset"
-            msg.recipients = email
-            msg.sender = mailID
+#         if(account):
+#             msg = Message()
+#             msg.subject = "Password Reset"
+#             msg.recipients = email
+#             msg.sender = mailID
 
-    return render_template('forgotPassword.html')
+#     return render_template('forgotPassword.html')
