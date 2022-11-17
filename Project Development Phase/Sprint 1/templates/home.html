@@ -1,1 +1,13 @@
-https://github.com/dobhal-abhishek/phishcoop
+{% extends "index.html" %}
+{% block page_content %}
+
+
+
+<form class="py-5" method="post" action="{{ url_for('register') }}">
+
+    <div class="mb-3 text-dark">
+        <label for="username" class="form-label text">Enter the URL </label>
+        (Enter email address)
+        <input type="text" id = "url" name = "url" class="form-control" required>
+    </div>
+</form>
