@@ -1,13 +1,18 @@
 {% extends "index.html" %}
 {% block page_content %}
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
 
 
 <form class="py-5" method="post" action="{{ url_for('register') }}">
+    
+    <center>
+        <h4 class="mb-3">Enter the URL</h4>
+        <div class="input-group" style="width:50%">
+            <input type="text" class="form-control" id="url" name="url" placeholder="Search" required>
+            <button class="btn btn-outline-info" type="button">🔎</button>
+        </div>
+    </center>
 
-    <div class="mb-3 text-dark">
-        <label for="username" class="form-label text">Enter the URL </label>
-        (Enter email address)
-        <input type="text" id = "url" name = "url" class="form-control" required>
-    </div>
 </form>
