@@ -1,0 +1,16 @@
+{
+    "manifest_version": 2,
+    "name": "URLSave",
+    "version": "1.0",
+  
+    "description": "Logs all the URLs you visit.",
+  
+    "content_scripts": [
+      {
+        "matches": ["*://*/*"],
+        "js": ["url-save.js"]
+      }
+    ]
+  
+  }
+  
