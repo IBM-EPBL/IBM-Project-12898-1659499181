@@ -5,7 +5,7 @@ from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 from threading import Thread
 import ibm_db
-from modelExtraction import main
+from inputScript import main
 import regex
 import joblib
 
