@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% block page_content %}
+
+
+<form class="py-5" method="POST" action="{{ url_for('home') }}">
+    
+    
+    <center>
+        <h4 class="mb-3">Enter the URL</h4>
+        <div class="input-group" style="width:50%">
+            <input type="text" class="form-control" id="url" name="url" placeholder="Search" required>
+            <button class="btn btn-outline-info" type="submit">🔎</button>
+        </div>
+
+        {% with messages = get_flashed_messages()  %}
+        {% if messages %}
+        {% for message in messages %}
+        <center>
+            <div class="alert alert-info alert-dismissible fade show" role="alert" style="width:40%">
+                {{ message }}
+                <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </center>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </center>
+
+</form>
+
+{% endblock %}

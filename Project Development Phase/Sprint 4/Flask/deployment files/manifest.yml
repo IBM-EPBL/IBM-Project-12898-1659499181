@@ -1,0 +1,8 @@
+---
+applications:
+
+
+- name: Web Phishing Detection Flask App
+  random-route: true
+  memory: 512M
+  disk_quota: 1.5G

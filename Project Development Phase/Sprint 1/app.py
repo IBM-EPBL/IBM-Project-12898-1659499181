@@ -9,16 +9,13 @@ from modelExtraction import main
 import regex
 import joblib
 
-mailID = "varun10test@gmail.com"
-mailIDpass = "123thisisit"
-
 app = Flask(__name__)
 app.secret_key = "super secret key"
 
-conn = ibm_db.connect("DATABASE=bludb;HOSTNAME=125f9f61-9715-46f9-9399-c8177b21803b.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud;PORT=30426;SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;UID=fgq80014;PWD=FfWqq4xxSBCf7CAO","","")
+# Add your own database name, hostname, uid, password etc.
+conn = ibm_db.connect("DATABASE=<>;HOSTNAME=<>;PORT=<>;SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;UID=<>;PWD=<>","","")
 
 #Sending Mail
-
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
@@ -32,7 +29,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         bcrypt = Bcrypt()      
-        sql = f"""SELECT * FROM "FGQ80014"."user" WHERE "email" = '{email}'"""
+        sql = f"""SELECT * FROM "<db_name>"."user" WHERE "email" = '{email}'"""
         stmt = ibm_db.exec_immediate(conn, sql)
         dictionary = ibm_db.fetch_both(stmt)
         password = request.form['password']
@@ -98,7 +95,7 @@ def register():
         gender = "M"
         bcrypt = Bcrypt()
         hashed_password = bcrypt.generate_password_hash(request.form['password1']).decode('utf-8')
-        sql = f"""SELECT COUNT(*) FROM "FGQ80014"."user" WHERE "email" = '{email}' """
+        sql = f"""SELECT COUNT(*) FROM "<db_name>"."user" WHERE "email" = '{email}' """
         
         #Check for existing user
         stmnt = ibm_db.exec_immediate(conn, sql)
@@ -107,7 +104,7 @@ def register():
             flash('Account already exists!')
 
         else:
-            sql2 = f"""INSERT INTO "FGQ80014"."user" VALUES('{name}','{email}', '{hashed_password}','{gender}', '{dob}')"""
+            sql2 = f"""INSERT INTO "<db_name>"."user" VALUES('{name}','{email}', '{hashed_password}','{gender}', '{dob}')"""
             reg_user = ibm_db.exec_immediate(conn, sql2)
             flash('You have successfully registered! Please login')
             return redirect(url_for('login'))
