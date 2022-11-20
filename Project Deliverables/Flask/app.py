@@ -1,29 +1,29 @@
 import imp
+from multiprocessing.connection import wait
+from time import sleep
 from flask import Flask, request, redirect, flash, url_for, session, jsonify
 from flask import render_template
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 from threading import Thread
 import ibm_db
+from flask_cors import CORS
 from inputScript import main
 import regex
+# from flask_mysqldb import MySQL
 import joblib
 
-mailID = "varun10test@gmail.com"
-mailIDpass = "123thisisit"
+
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
 
-conn = ibm_db.connect("DATABASE=bludb;HOSTNAME=125f9f61-9715-46f9-9399-c8177b21803b.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud;PORT=30426;SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;UID=fgq80014;PWD=FfWqq4xxSBCf7CAO","","")
+#Add your hostname, UID and pass
+conn = ibm_db.connect("DATABASE=bludb;HOSTNAME={};PORT={};SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;UID={};PWD={}","","")
 
 #Sending Mail
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = mailID
-app.config['MAIL_PASSWORD'] = mailIDpass
+CORS(app)
 mail = Mail(app)
 
 
@@ -55,7 +55,7 @@ def logout():
    flash("You have successfully logged out, please log in again!")
    return redirect(url_for('login'))
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/home', methods=['GET', 'POST'])
 def home():
     
     
@@ -70,7 +70,7 @@ def home():
         val = main(url)
         print(val) #Check this val
 
-        classifier = joblib.load('webPhishingDetectorSVM.pkl')
+        classifier = joblib.load('Phishing_Website.pkl')
 
         prediction = classifier.predict(val)
         print(prediction)
@@ -86,7 +86,7 @@ def home():
         return render_template('home.html')
 
     else:
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
 
 
 @app.route('/register' , methods = ['GET' , 'POST'])
@@ -98,7 +98,7 @@ def register():
         gender = "M"
         bcrypt = Bcrypt()
         hashed_password = bcrypt.generate_password_hash(request.form['password1']).decode('utf-8')
-        sql = f"""SELECT COUNT(*) FROM "FGQ80014"."user" WHERE "email" = '{email}' """
+        sql = f"""SELECT COUNT(*) FROM "PLC28808"."user" WHERE "email" = '{email}' """
         
         #Check for existing user
         stmnt = ibm_db.exec_immediate(conn, sql)
@@ -116,23 +116,6 @@ def register():
 
 
 
-@app.route('/forgotPass' , methods = ['GET' , 'POST'])
-def forgotPass():
-    if request.method == 'post':
-        email = request.form('email')
-
-        #Check for existing user
-        cursor.execute('''SELECT * FROM user WHERE email = %s''', [email])
-        account = cursor.fetchone()
-
-        if(account):
-            msg = Message()
-            msg.subject = "Password Reset"
-            msg.recipients = email
-            msg.sender = mailID
-
-    return render_template('forgotPassword.html')
-
 # endpoint for extension
 
 @app.route('/extension', methods=['GET','POST'])
@@ -143,7 +126,7 @@ def extension():
         print(url)
         val = main(url)
         print("Val: " , val)
-        classifier = joblib.load('webPhishingDetectorSVM.pkl')
+        classifier = joblib.load('Phishing_Website.pkl')
         prediction = classifier.predict(val)
         print(prediction)
         return jsonify({'prediction':str(prediction[0])})
