@@ -11,7 +11,7 @@ Phishing sites are malicious websites that imitate legitimate websites or web pa
 ### Proposed Solution
 Our product serves as a browser extension and it scrapes the website URL and runs it through our ML model. If our model detects it as a phishing website, the extension notifies the user. The browser extension factor is not used in any previous works. Since this is a browser extension, the user does not have to think twice before using a website as our extension will take care of the classifying work. Since this is a very hands off approach, the user does not have to do any work and let the extension inform the user about the legitimacy of the website. This drastically reduces the amount of information stolen by phishing sites and also increases customer satisfaction as they would be reassured when using a legitimate website.
  
-We propose a two tier system namely a ‘free’ and a ‘premium’ tier. The free tier would include ads that display below when classifying a website. The premium tier is a recurring subscription either monthly or annually that removes all advertisements, increasing speed and efficiency of the classifying models. Since this is a browser extension which would be published in Chrome Marketplace, it can be accessed and used by everyone across the world. As it is hosted in IBM Cloud, it could be scaled up and down as per demand.
+Since this is a browser extension which would be published in Chrome Marketplace, it can be accessed and used by everyone across the world. As it is hosted in IBM Cloud, it could be scaled up and down as per demand.
 
 
 ### Final Working Video of the Website
