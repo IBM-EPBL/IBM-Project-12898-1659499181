@@ -1,0 +1,13 @@
+{
+    "manifest_version": 2,
+    "name": "WPD",
+    "version": "1.0",
+    "permissions": ["<all_urls>"],
+    "description": "An Extension to detect potential Phishing websites",
+    "content_scripts": [
+      {
+        "matches": ["*://*/*"],
+        "js": ["wpd.js"]
+      }
+    ]
+  }

@@ -1,4 +1,4 @@
-{% extends "./Flask/index.html" %}
+{% extends "index.html" %}
 {% block page_content %}
 
     <!-- Body -->
@@ -20,7 +20,7 @@
                 Login To <span class="text-info">WPD Login System</span>
             </h2>
             <div class="d-flex align-items-center justify-content-center">
-                <form class="py-5" method = "post">
+                <form class="py-5" method = "post" action="{{ url_for('login') }}">
                     <div class="mb-3 text-dark">
                         <label for="username" class="form-label text">User Name: </label>
                         <input type="email" name ="email" id="email" class="form-control" style="width:400px" required>
@@ -31,7 +31,7 @@
                     </div>
                     <br>
                     <div class="text-center mb-3">
-                        <button class="btn btn-info">Submit</button>
+                        <button class="btn btn-info" type = "submit" >Submit</button>
                     </div>
                     <div class="text-center">
                         <a href="{{ url_for('register')}}">Sign Up</a> / <a href="{{ url_for('register')}}">Forgot Password</a>

@@ -1,8 +1,8 @@
-{% extends "./Flask/index.html" %}
+{% extends "index.html" %}
 {% block page_content %}
 
 
-<form class="py-5" method="post" >
+<form class="py-5" method="POST" action="{{ url_for('home') }}">
     
     
     <center>
